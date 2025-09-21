@@ -39,6 +39,12 @@ const PROMO_CODES = {
         discount: 20,
         description: '20% off any package',
         validPrograms: ['Droplet', 'Splashlet', 'Strokelet']
+    },
+    'admin': {
+        type: 'percentage',
+        discount: 100, // 100% off - makes packages free
+        description: 'Admin code - Free package',
+        validPrograms: ['Droplet', 'Splashlet', 'Strokelet']
     }
 };
 
@@ -56,6 +62,21 @@ let bookingMode = null; // 'package' or 'single'
 let singleLessonProgram = null;
 let singleLessonPrice = null;
 let customerEmail = null; // Store email for package purchase
+
+// --- Helper Functions ---
+function calculateDiscount(price, promoCode) {
+    if (!promoCode) return 0;
+    if (promoCode.type === 'percentage') {
+        return Math.round((price * promoCode.discount) / 100);
+    }
+    return 0;
+}
+
+function calculateFinalPrice(price, promoCode) {
+    if (!promoCode) return price;
+    const discount = calculateDiscount(price, promoCode);
+    return Math.max(0, price - discount);
+}
 
 // --- Main Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -114,6 +135,12 @@ function initializeBookingFlow() {
             document.getElementById('package-code-input').value = code;
             handleScheduleWithCode();
         });
+    }
+
+    // Promo code apply button
+    const applyPromoBtn = document.getElementById('apply-promo-btn');
+    if (applyPromoBtn) {
+        applyPromoBtn.addEventListener('click', applyPromoCode);
     }
 }
 
@@ -432,10 +459,20 @@ async function setupPaymentForm() {
                     <span class="font-semibold text-sm">${customerEmail}</span>
                 </div>
                 ` : ''}
+                ${appliedPromoCode ? `
+                <div class="flex justify-between">
+                    <span>Subtotal:</span>
+                    <span>$${selectedPackage.price}</span>
+                </div>
+                <div class="flex justify-between text-green-600">
+                    <span>Discount (${appliedPromoCode.code}):</span>
+                    <span>-$${calculateDiscount(selectedPackage.price, appliedPromoCode)}</span>
+                </div>
+                ` : ''}
                 <div class="border-t pt-2 mt-2">
                     <div class="flex justify-between text-lg font-bold">
                         <span>Total:</span>
-                        <span>$${selectedPackage.price}</span>
+                        <span>$${calculateFinalPrice(selectedPackage.price, appliedPromoCode)}</span>
                     </div>
                 </div>
             </div>
@@ -464,21 +501,61 @@ async function setupPaymentForm() {
 // Modified handlePaymentSubmit to include email
 async function handlePaymentSubmit(event) {
     event.preventDefault();
-    
+
     const submitButton = document.getElementById('pay-button');
     const paymentDiv = document.getElementById('payment-element');
-    
+    const finalPrice = calculateFinalPrice(selectedPackage.price, appliedPromoCode);
+
+    // Handle free packages (100% discount)
+    if (finalPrice === 0) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Creating free package...';
+
+        try {
+            const response = await fetch('/.netlify/functions/create-free-admin-package', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    program: selectedPackage.program,
+                    lessons: selectedPackage.lessons,
+                    customerEmail: customerEmail,
+                    promoCode: appliedPromoCode.code
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Free package creation failed');
+            }
+
+            const { packageCode } = await response.json();
+            window.recentPackageCode = packageCode;
+
+            // Show success and redirect to booking
+            document.getElementById('package-code-display').textContent = packageCode;
+            showSuccessAndRedirect();
+            return;
+
+        } catch (error) {
+            console.error('Free package creation error:', error);
+            submitButton.disabled = false;
+            submitButton.textContent = 'Complete Payment';
+            alert('Failed to create free package: ' + error.message);
+            return;
+        }
+    }
+
     if (!paymentElement) {
         // Create payment intent first
         submitButton.disabled = true;
         submitButton.textContent = 'Initializing payment...';
-        
+
         try {
             const response = await fetch('/.netlify/functions/create-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    amount: selectedPackage.price * 100,
+                    amount: finalPrice * 100, // Use final price after discount
                     program: selectedPackage.program,
                     lessons: selectedPackage.lessons,
                     customerEmail: customerEmail // Include the collected email
@@ -1322,7 +1399,7 @@ window.applyPromoCode = function() {
     }
     
     appliedPromoCode = { code, ...promo };
-    
+
     if (promo.type === 'single_lesson' && promo.discount === 100) {
         promoMessage.innerHTML = `✅ <strong>${promo.description}</strong> applied!`;
         promoMessage.className = 'text-sm text-green-600 font-semibold';
@@ -1330,8 +1407,11 @@ window.applyPromoCode = function() {
         promoMessage.innerHTML = `✅ <strong>${promo.discount}% off</strong> applied!`;
         promoMessage.className = 'text-sm text-green-600 font-semibold';
     }
-    
+
     promoMessage.classList.remove('hidden');
+
+    // Refresh payment summary to show discount
+    setupPaymentForm();
 };
 
 // New function for selecting single lesson
