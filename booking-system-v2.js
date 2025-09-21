@@ -1643,12 +1643,20 @@ function proceedToSingleLessonCalendar() {
 const originalSelectTimeSlot = window.selectTimeSlot;
 window.selectTimeSlot = function(slotId, date, time) {
     selectedTimeSlot = { id: slotId, date: date, time: time };
-    
+
+    console.log('DEBUG selectTimeSlot:', {
+        bookingMode: bookingMode,
+        enteredPackageCode: enteredPackageCode,
+        singleLessonPrice: singleLessonPrice
+    });
+
     if (bookingMode === 'single' && !enteredPackageCode) {
         // For single lessons without a package code (paid single lessons)
+        console.log('DEBUG: Going to showSingleLessonCheckout');
         showSingleLessonCheckout();
     } else {
         // Original flow for packages or free single lessons
+        console.log('DEBUG: Going to showBookingForm');
         showBookingForm();
     }
 };
