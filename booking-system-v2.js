@@ -1583,7 +1583,7 @@ async function handleFreeSingleLesson() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 program: singleLessonProgram,
-                promoCode: appliedPromoCode.code
+                promoCode: appliedPromoCode ? appliedPromoCode.code : 'FIRST-FREE'
             })
         });
         
@@ -1612,7 +1612,8 @@ async function handleFreeSingleLesson() {
 
 function proceedToSingleLessonCalendar() {
     selectedProgram = singleLessonProgram;
-    
+    bookingMode = 'single';
+
     // Hide single lesson flow
     document.getElementById('single-lesson-flow').classList.add('hidden');
     
