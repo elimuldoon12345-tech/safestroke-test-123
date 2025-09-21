@@ -143,13 +143,13 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 3. Check if this student is already booked for this slot
+    // 3. Check if this customer is already booked for this slot
     const { data: existingBooking } = await supabase
       .from('bookings')
       .select('id')
       .eq('time_slot_id', timeSlotId)
       .eq('package_code', packageCode)
-      .eq('student_name', studentName)
+      .eq('customer_email', customerEmail)
       .single();
 
     if (existingBooking) {
@@ -175,13 +175,11 @@ exports.handler = async (event, context) => {
         {
           time_slot_id: timeSlotId,
           package_code: packageCode,
-          student_name: studentName,
-          student_age: studentAge,
           customer_email: customerEmail,
           customer_name: customerName,
           customer_phone: customerPhone,
           status: 'confirmed',
-          notes: notes,
+          booking_date: new Date().toISOString(),
           created_at: new Date().toISOString()
         }
       ])
