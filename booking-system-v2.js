@@ -40,7 +40,7 @@ const PROMO_CODES = {
         description: '20% off any package',
         validPrograms: ['Droplet', 'Splashlet', 'Strokelet']
     },
-    'admin': {
+    'ADMIN': {
         type: 'percentage',
         discount: 100, // 100% off - makes packages free
         description: 'Admin code - Free package',
@@ -141,6 +141,12 @@ function initializeBookingFlow() {
     const applyPromoBtn = document.getElementById('apply-promo-btn');
     if (applyPromoBtn) {
         applyPromoBtn.addEventListener('click', applyPromoCode);
+    }
+
+    // Cancel booking button
+    const cancelBookingBtn = document.getElementById('cancel-booking-btn');
+    if (cancelBookingBtn) {
+        cancelBookingBtn.addEventListener('click', handleCancelBooking);
     }
 }
 
@@ -1413,6 +1419,77 @@ window.applyPromoCode = function() {
     // Refresh payment summary to show discount
     setupPaymentForm();
 };
+
+// Cancel booking functionality
+async function handleCancelBooking() {
+    const bookingIdInput = document.getElementById('cancel-booking-id');
+    const emailInput = document.getElementById('cancel-customer-email');
+    const cancelMessage = document.getElementById('cancel-message');
+    const cancelBtn = document.getElementById('cancel-booking-btn');
+
+    const bookingId = bookingIdInput.value.trim();
+    const customerEmail = emailInput.value.trim();
+
+    // Reset previous messages
+    cancelMessage.classList.add('hidden');
+
+    // Validate inputs
+    if (!bookingId || !customerEmail) {
+        cancelMessage.textContent = 'Please enter both booking ID and email address';
+        cancelMessage.className = 'text-red-600 text-center mt-4';
+        cancelMessage.classList.remove('hidden');
+        return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customerEmail)) {
+        cancelMessage.textContent = 'Please enter a valid email address';
+        cancelMessage.className = 'text-red-600 text-center mt-4';
+        cancelMessage.classList.remove('hidden');
+        return;
+    }
+
+    // Disable button and show loading
+    cancelBtn.disabled = true;
+    cancelBtn.textContent = 'Cancelling...';
+
+    try {
+        const response = await fetch('/.netlify/functions/cancel-booking', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                bookingId: bookingId,
+                customerEmail: customerEmail
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Failed to cancel booking');
+        }
+
+        // Success
+        cancelMessage.innerHTML = `✅ <strong>Booking cancelled successfully!</strong><br>Your lesson has been cancelled and your package credit has been restored.`;
+        cancelMessage.className = 'text-green-600 text-center mt-4';
+        cancelMessage.classList.remove('hidden');
+
+        // Clear inputs
+        bookingIdInput.value = '';
+        emailInput.value = '';
+
+    } catch (error) {
+        console.error('Cancel booking error:', error);
+        cancelMessage.textContent = `Failed to cancel booking: ${error.message}`;
+        cancelMessage.className = 'text-red-600 text-center mt-4';
+        cancelMessage.classList.remove('hidden');
+    } finally {
+        // Re-enable button
+        cancelBtn.disabled = false;
+        cancelBtn.textContent = 'Cancel Booking';
+    }
+}
 
 // New function for selecting single lesson
 window.selectSingleLesson = function() {

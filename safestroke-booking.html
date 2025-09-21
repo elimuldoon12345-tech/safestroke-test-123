@@ -308,7 +308,19 @@
                     </div>
                     <p id="code-error-message" class="text-red-600 text-center mt-4 hidden"></p>
                 </div>
-                
+
+                <!-- Cancel Booking Section -->
+                <div id="cancel-booking-section" class="bg-red-50 p-8 rounded-xl shadow-lg border border-red-100 mt-8">
+                    <h2 class="text-2xl font-bold mb-4 text-center text-red-800">Cancel a Booking</h2>
+                    <p class="text-center text-red-600 mb-6">Need to cancel a lesson? Enter your details below.</p>
+                    <div class="max-w-lg mx-auto space-y-4">
+                        <input type="text" id="cancel-booking-id" placeholder="Booking ID (from confirmation email)" class="w-full px-4 py-3 border border-red-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <input type="email" id="cancel-customer-email" placeholder="Your email address" class="w-full px-4 py-3 border border-red-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <button id="cancel-booking-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-300">Cancel Booking</button>
+                    </div>
+                    <p id="cancel-message" class="text-center mt-4 hidden"></p>
+                </div>
+
                 <!-- Package Purchase Flow (Hidden by default) -->
                 <div id="package-flow" class="hidden bg-white p-8 rounded-xl shadow-lg border border-gray-100 mt-8">
                     <h2 class="text-2xl font-bold mb-8 text-center">Purchase a Lesson Package</h2>
