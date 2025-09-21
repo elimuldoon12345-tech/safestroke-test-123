@@ -200,16 +200,28 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 5. The database triggers will automatically:
-    // - Update time_slot enrollment count
-    // - Decrease package lessons_remaining
-    // But we'll fetch the updated package to return the current count
-
-    const { data: updatedPackage } = await supabase
+    // 5. Manually decrease package lessons_remaining
+    const { data: updatedPackage, error: packageUpdateError } = await supabase
       .from('packages')
-      .select('lessons_remaining')
+      .update({
+        lessons_remaining: packageData.lessons_remaining - 1
+      })
       .eq('code', packageCode)
+      .select('lessons_remaining')
       .single();
+
+    if (packageUpdateError) {
+      console.error('Package update error:', packageUpdateError);
+      // This is critical - if we can't update the package, we should not complete the booking
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({
+          error: 'Failed to update package lessons',
+          details: packageUpdateError.message
+        }),
+      };
+    }
 
     // 6. Update or create customer record
     const { error: customerError } = await supabase

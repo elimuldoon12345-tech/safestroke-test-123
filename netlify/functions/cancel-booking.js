@@ -84,22 +84,29 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 3. Get current package data and restore lesson
+    // 3. Get current package data and restore lesson (if not exceeding total)
     const { data: packageData, error: packageGetError } = await supabase
       .from('packages')
-      .select('lessons_remaining')
+      .select('lessons_remaining, lessons_total')
       .eq('code', booking.package_code)
       .single();
 
     if (!packageGetError && packageData) {
+      // Only restore lesson if it won't exceed the original total
+      const newLessonsRemaining = Math.min(
+        packageData.lessons_remaining + 1,
+        packageData.lessons_total
+      );
+
       const { error: packageUpdateError } = await supabase
         .from('packages')
         .update({
-          lessons_remaining: packageData.lessons_remaining + 1
+          lessons_remaining: newLessonsRemaining
         })
         .eq('code', booking.package_code);
 
       console.log('DEBUG: Package update result - error:', packageUpdateError);
+      console.log('DEBUG: Restored lessons from', packageData.lessons_remaining, 'to', newLessonsRemaining);
 
       if (packageUpdateError) {
         console.error('Package update error:', packageUpdateError);
