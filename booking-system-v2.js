@@ -280,8 +280,13 @@ window.selectPackage = function(lessons, price) {
         lessons: lessons,
         price: price
     };
-    bookingMode = 'package';
-    console.log('Package selected:', selectedPackage);
+
+    // Keep the existing bookingMode if it's already set to 'single'
+    if (bookingMode !== 'single') {
+        bookingMode = 'package';
+    }
+
+    console.log('Package/Single lesson selected:', selectedPackage, 'Mode:', bookingMode);
     
     // ✅ FIXED: Track package selection for Meta Pixel
     if (typeof window.trackPackageSelection === 'function') {
@@ -1642,13 +1647,14 @@ function showSingleLessonPayment() {
 
         // Update the package display to show single lesson info
         selectedProgram = singleLessonProgram;
+        bookingMode = 'single'; // Set booking mode BEFORE rendering
         selectedPackage = {
             program: singleLessonProgram,
             lessons: 1,
             price: singleLessonPrice
         };
 
-        console.log('DEBUG: Set selectedProgram and selectedPackage');
+        console.log('DEBUG: Set selectedProgram, selectedPackage, and bookingMode to single');
 
         // Show step 2 (package selection) and hide step 1
         const step1 = document.getElementById('step-1');
@@ -1691,7 +1697,15 @@ function showSingleLessonPayment() {
 }
 
 function renderSingleLessonPackage() {
+    console.log('DEBUG: renderSingleLessonPackage called');
     const container = document.getElementById('package-container');
+
+    if (!container) {
+        console.error('ERROR: package-container not found');
+        return;
+    }
+
+    console.log('DEBUG: Found package-container, rendering single lesson');
 
     container.innerHTML = `
         <div class="max-w-md mx-auto">
@@ -1703,7 +1717,7 @@ function renderSingleLessonPackage() {
                         <p class="text-3xl font-bold brand-blue">$${singleLessonPrice}</p>
                         <p class="text-sm text-gray-600">One lesson</p>
                     </div>
-                    <button onclick="proceedToPayment()"
+                    <button onclick="selectPackage(1, ${singleLessonPrice})"
                             class="w-full brand-blue-bg hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full text-lg transition">
                         Purchase Single Lesson
                     </button>
