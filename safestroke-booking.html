@@ -429,7 +429,27 @@
                 <!-- Single Lesson Flow (Hidden by default) -->
                 <div id="single-lesson-flow" class="hidden bg-white p-8 rounded-xl shadow-lg border border-gray-100 mt-8">
                     <h2 class="text-2xl font-bold mb-8 text-center">Book a Single Lesson</h2>
-                    
+
+                    <!-- Important Note for First-Time Users -->
+                    <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-center text-blue-800 font-semibold">🎉 New to SafeStroke? Use code <strong>FIRST-FREE</strong> below for a completely free lesson!</p>
+                        <p class="text-center text-blue-600 text-sm mt-1">Apply the promo code first, then select your program.</p>
+                    </div>
+
+                    <!-- Promo Code Section (Moved to Top) -->
+                    <div class="max-w-md mx-auto bg-green-50 p-4 rounded-lg mb-8 border-2 border-green-200">
+                        <p class="text-sm font-semibold text-gray-700 mb-2 text-center">Have a promo code? Apply it first!</p>
+                        <div class="flex gap-2">
+                            <input type="text" id="single-promo-input" placeholder="Enter code (e.g., FIRST-FREE)"
+                                   class="flex-1 px-3 py-2 border border-gray-300 rounded-lg">
+                            <button onclick="applySingleLessonPromo()"
+                                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold">
+                                Apply
+                            </button>
+                        </div>
+                        <div id="single-promo-message" class="text-sm mt-2 hidden"></div>
+                    </div>
+
                     <!-- Single Lesson Step 1: Choose Program -->
                     <div id="single-step-1">
                         <h3 class="text-lg font-semibold mb-4 text-center">Step 1: Choose Your Program</h3>
@@ -467,20 +487,6 @@
                                     <p class="text-sm text-gray-500">per lesson</p>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Promo Code Section -->
-                        <div class="max-w-md mx-auto bg-green-50 p-4 rounded-lg">
-                            <p class="text-sm font-semibold text-gray-700 mb-2">Have a promo code?</p>
-                            <div class="flex gap-2">
-                                <input type="text" id="single-promo-input" placeholder="Enter code (e.g., FIRST-FREE)" 
-                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg">
-                                <button onclick="applySingleLessonPromo()" 
-                                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold">
-                                    Apply
-                                </button>
-                            </div>
-                            <div id="single-promo-message" class="text-sm mt-2 hidden"></div>
                         </div>
                         
                         <div class="text-center mt-6">
