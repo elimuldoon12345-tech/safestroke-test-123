@@ -29,6 +29,9 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    console.log('DEBUG: book-time-slot called');
+    console.log('DEBUG: event.body:', event.body);
+
     const {
       packageCode,
       timeSlotId,
@@ -39,6 +42,10 @@ exports.handler = async (event, context) => {
       customerPhone,
       notes
     } = JSON.parse(event.body);
+
+    console.log('DEBUG: Parsed booking data:', {
+      packageCode, timeSlotId, studentName, customerName, customerEmail
+    });
 
     // Validate required fields
     if (!packageCode || !timeSlotId || !studentName || !customerName || !customerEmail) {
@@ -62,8 +69,11 @@ exports.handler = async (event, context) => {
       .eq('status', 'paid')
       .single();
     
+    console.log('DEBUG: paidPackage result:', paidPackage, 'error:', paidError);
+
     if (paidPackage) {
       packageData = paidPackage;
+      console.log('DEBUG: Using paid package');
     } else {
       // Check for a pending single lesson package created recently
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
@@ -75,22 +85,32 @@ exports.handler = async (event, context) => {
         .eq('lessons_total', 1) // Only for single lessons
         .gte('created_at', fiveMinutesAgo) // Created within last 5 minutes
         .single();
-      
+
+      console.log('DEBUG: pendingPackage result:', pendingPackage, 'error:', pendingError);
+
       if (pendingPackage) {
         // For single lessons with pending payment, allow booking
         // The webhook will update the status to 'paid' shortly
         packageData = pendingPackage;
+        console.log('DEBUG: Using pending package');
         console.log('Allowing booking for pending single lesson package:', packageCode);
       }
     }
 
     if (!packageData) {
+      console.log('DEBUG: No package found for code:', packageCode);
+      console.log('DEBUG: Checked paid status and recent pending status');
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ error: 'Invalid package code or payment not yet confirmed. Please try again in a moment.' }),
+        body: JSON.stringify({
+          error: 'Invalid package code or payment not yet confirmed. Please try again in a moment.',
+          debug: `Package code: ${packageCode} not found`
+        }),
       };
     }
+
+    console.log('DEBUG: Package found:', packageData);
 
     if (packageData.lessons_remaining <= 0) {
       return {
