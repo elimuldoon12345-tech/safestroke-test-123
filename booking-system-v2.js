@@ -1420,6 +1420,24 @@ window.applyPromoCode = function() {
     setupPaymentForm();
 };
 
+// Show success and redirect to booking calendar
+function showSuccessAndRedirect() {
+    // Show success section (step 4)
+    showStep(4);
+
+    // Hide the package flow and show the success section
+    document.getElementById('package-flow').classList.add('hidden');
+    document.getElementById('success-section').classList.remove('hidden');
+
+    // Scroll to success section
+    setTimeout(() => {
+        document.getElementById('success-section').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }, 100);
+}
+
 // Cancel booking functionality
 async function handleCancelBooking() {
     const bookingIdInput = document.getElementById('cancel-booking-id');
