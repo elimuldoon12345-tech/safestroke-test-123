@@ -161,6 +161,14 @@ exports.handler = async (event, context) => {
     }
 
     // 4. Create the booking
+    console.log('DEBUG: About to create booking in time_slot_bookings table');
+    console.log('DEBUG: Booking data:', {
+      time_slot_id: timeSlotId,
+      package_code: packageCode,
+      student_name: studentName,
+      customer_email: customerEmail
+    });
+
     const { data: booking, error: bookingError } = await supabase
       .from('time_slot_bookings')
       .insert([
@@ -180,12 +188,17 @@ exports.handler = async (event, context) => {
       .select()
       .single();
 
+    console.log('DEBUG: Booking creation result - data:', booking, 'error:', bookingError);
+
     if (bookingError) {
       console.error('Booking creation error:', bookingError);
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({ error: 'Failed to create booking' }),
+        body: JSON.stringify({
+          error: 'Failed to create booking',
+          details: bookingError.message
+        }),
       };
     }
 
