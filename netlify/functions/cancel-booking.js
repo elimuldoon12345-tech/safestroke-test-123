@@ -84,19 +84,27 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // 3. Restore lesson to package (increment lessons_remaining)
-    const { error: packageUpdateError } = await supabase
+    // 3. Get current package data and restore lesson
+    const { data: packageData, error: packageGetError } = await supabase
       .from('packages')
-      .update({
-        lessons_remaining: supabase.raw('lessons_remaining + 1')
-      })
-      .eq('code', booking.package_code);
+      .select('lessons_remaining')
+      .eq('code', booking.package_code)
+      .single();
 
-    console.log('DEBUG: Package update result - error:', packageUpdateError);
+    if (!packageGetError && packageData) {
+      const { error: packageUpdateError } = await supabase
+        .from('packages')
+        .update({
+          lessons_remaining: packageData.lessons_remaining + 1
+        })
+        .eq('code', booking.package_code);
 
-    if (packageUpdateError) {
-      console.error('Package update error:', packageUpdateError);
-      // Non-critical, booking is already cancelled
+      console.log('DEBUG: Package update result - error:', packageUpdateError);
+
+      if (packageUpdateError) {
+        console.error('Package update error:', packageUpdateError);
+        // Non-critical, booking is already cancelled
+      }
     }
 
     return {
