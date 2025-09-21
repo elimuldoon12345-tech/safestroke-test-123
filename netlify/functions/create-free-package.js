@@ -28,10 +28,16 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    console.log('DEBUG: create-free-package called');
+    console.log('DEBUG: event.body:', event.body);
+
     const { program, promoCode } = JSON.parse(event.body);
+
+    console.log('DEBUG: Parsed data - program:', program, 'promoCode:', promoCode);
 
     // Validate inputs
     if (!program || !promoCode) {
+      console.log('DEBUG: Missing required fields - program:', program, 'promoCode:', promoCode);
       return {
         statusCode: 400,
         headers,
@@ -41,8 +47,11 @@ exports.handler = async (event, context) => {
 
     // Generate a unique package code for free lesson
     const packageCode = `FREE-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`.toUpperCase();
-    
+
+    console.log('DEBUG: Generated package code:', packageCode);
+
     // Create the free package
+    console.log('DEBUG: Attempting to insert into packages table');
     const { data: packageData, error: packageError } = await supabase
       .from('packages')
       .insert([
@@ -54,19 +63,25 @@ exports.handler = async (event, context) => {
           amount_paid: 0,
           payment_intent_id: `promo_${promoCode}`,
           status: 'paid',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          customer_email: null, // Add missing field
+          created_at: new Date().toISOString()
+          // Remove updated_at field that might not exist
         }
       ])
       .select()
       .single();
+
+    console.log('DEBUG: Database operation result - data:', packageData, 'error:', packageError);
 
     if (packageError) {
       console.error('Package creation error:', packageError);
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({ error: 'Failed to create free package' }),
+        body: JSON.stringify({
+          error: 'Failed to create free package',
+          details: packageError.message
+        }),
       };
     }
 
