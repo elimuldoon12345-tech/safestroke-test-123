@@ -1434,25 +1434,37 @@ window.backToOptions = function() {
 };
 
 window.selectSingleLessonProgram = function(program) {
-    singleLessonProgram = program;
-    singleLessonPrice = PACKAGE_PRICING[program][1];
-    
-    // Check if promo code is applied
-    if (appliedPromoCode && appliedPromoCode.type === 'single_lesson') {
-        singleLessonPrice = singleLessonPrice * (1 - appliedPromoCode.discount / 100);
-    }
-    
-    // ✅ FIXED: Track single lesson selection for Meta Pixel
-    if (typeof window.trackSingleLessonSelection === 'function') {
-        window.trackSingleLessonSelection(program, singleLessonPrice);
-    }
-    
-    // If free lesson, create free package and go to calendar
-    if (singleLessonPrice === 0) {
-        handleFreeSingleLesson();
-    } else {
-        // For paid single lessons, show payment form first
-        showSingleLessonPayment();
+    try {
+        console.log('DEBUG: selectSingleLessonProgram called with:', program);
+
+        singleLessonProgram = program;
+        singleLessonPrice = PACKAGE_PRICING[program][1];
+
+        console.log('DEBUG: singleLessonPrice set to:', singleLessonPrice);
+
+        // Check if promo code is applied
+        if (appliedPromoCode && appliedPromoCode.type === 'single_lesson') {
+            singleLessonPrice = singleLessonPrice * (1 - appliedPromoCode.discount / 100);
+            console.log('DEBUG: Applied promo code, new price:', singleLessonPrice);
+        }
+
+        // ✅ FIXED: Track single lesson selection for Meta Pixel
+        if (typeof window.trackSingleLessonSelection === 'function') {
+            window.trackSingleLessonSelection(program, singleLessonPrice);
+        }
+
+        // If free lesson, create free package and go to calendar
+        if (singleLessonPrice === 0) {
+            console.log('DEBUG: Free lesson, calling handleFreeSingleLesson');
+            handleFreeSingleLesson();
+        } else {
+            // For paid single lessons, show payment form first
+            console.log('DEBUG: Paid lesson, calling showSingleLessonPayment');
+            showSingleLessonPayment();
+        }
+    } catch (error) {
+        console.error('ERROR in selectSingleLessonProgram:', error);
+        alert('Error selecting lesson program: ' + error.message);
     }
 };
 
@@ -1611,22 +1623,71 @@ async function handleFreeSingleLesson() {
 }
 
 function showSingleLessonPayment() {
-    // Hide single lesson flow
-    document.getElementById('single-lesson-flow').classList.add('hidden');
+    try {
+        console.log('DEBUG: showSingleLessonPayment called');
 
-    // Show payment section similar to package flow
-    document.getElementById('new-customer-path').classList.remove('hidden');
+        // Hide single lesson flow
+        const singleLessonFlow = document.getElementById('single-lesson-flow');
+        if (singleLessonFlow) {
+            singleLessonFlow.classList.add('hidden');
+            console.log('DEBUG: Hidden single-lesson-flow');
+        }
 
-    // Update the package display to show single lesson info
-    selectedProgram = singleLessonProgram;
-    selectedPackage = {
-        program: singleLessonProgram,
-        lessons: 1,
-        price: singleLessonPrice
-    };
+        // Show package flow section (we'll reuse it for single lessons)
+        const packageFlow = document.getElementById('package-flow');
+        if (packageFlow) {
+            packageFlow.classList.remove('hidden');
+            console.log('DEBUG: Shown package-flow');
+        }
 
-    // Render single lesson as a "package" of 1
-    renderSingleLessonPackage();
+        // Update the package display to show single lesson info
+        selectedProgram = singleLessonProgram;
+        selectedPackage = {
+            program: singleLessonProgram,
+            lessons: 1,
+            price: singleLessonPrice
+        };
+
+        console.log('DEBUG: Set selectedProgram and selectedPackage');
+
+        // Show step 2 (package selection) and hide step 1
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+
+        if (step1) {
+            step1.classList.add('hidden');
+            console.log('DEBUG: Hidden step-1');
+        }
+
+        if (step2) {
+            step2.classList.remove('hidden');
+            console.log('DEBUG: Shown step-2');
+        }
+
+        // Update step indicators
+        const step1Indicator = document.getElementById('step-1-indicator');
+        const step2Indicator = document.getElementById('step-2-indicator');
+
+        if (step1Indicator) {
+            step1Indicator.textContent = 'Step 1: Choose Program ✓';
+            step1Indicator.className = 'step-indicator bg-green-100 text-green-800 font-bold py-2 px-6 rounded-full';
+        }
+
+        if (step2Indicator) {
+            step2Indicator.textContent = 'Step 2: Purchase Lesson';
+            step2Indicator.className = 'step-indicator active bg-blue-100 text-blue-800 font-bold py-2 px-6 rounded-full';
+        }
+
+        console.log('DEBUG: Updated step indicators');
+
+        // Render single lesson as a "package" of 1
+        renderSingleLessonPackage();
+
+        console.log('DEBUG: showSingleLessonPayment completed successfully');
+    } catch (error) {
+        console.error('ERROR in showSingleLessonPayment:', error);
+        alert('Error showing single lesson payment: ' + error.message);
+    }
 }
 
 function renderSingleLessonPackage() {
