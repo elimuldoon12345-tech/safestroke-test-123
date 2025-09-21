@@ -63,9 +63,7 @@ exports.handler = async (event, context) => {
           amount_paid: 0,
           payment_intent_id: `promo_${promoCode}`,
           status: 'paid',
-          customer_email: null, // Add missing field
           created_at: new Date().toISOString()
-          // Remove updated_at field that might not exist
         }
       ])
       .select()
