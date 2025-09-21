@@ -619,8 +619,13 @@ function updateCalendarTitle(code, packageData) {
 
 async function loadTimeSlots(program) {
     try {
+        console.log('=== LOADING TIME SLOTS DEBUG ===');
+        console.log('Program requested:', program);
+        console.log('Current calendar month:', currentCalendarMonth.toISOString());
+        console.log('Query URL:', `/.netlify/functions/get-time-slots?program=${program}&month=${currentCalendarMonth.toISOString()}`);
+
         const response = await fetch(`/.netlify/functions/get-time-slots?program=${program}&month=${currentCalendarMonth.toISOString()}`);
-        
+
         if (!response.ok) {
             throw new Error('Failed to load time slots');
         }
