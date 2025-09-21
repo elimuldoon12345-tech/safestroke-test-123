@@ -1451,8 +1451,8 @@ window.selectSingleLessonProgram = function(program) {
     if (singleLessonPrice === 0) {
         handleFreeSingleLesson();
     } else {
-        // Go to calendar for time selection
-        proceedToSingleLessonCalendar();
+        // For paid single lessons, show payment form first
+        showSingleLessonPayment();
     }
 };
 
@@ -1610,6 +1610,48 @@ async function handleFreeSingleLesson() {
     }
 }
 
+function showSingleLessonPayment() {
+    // Hide single lesson flow
+    document.getElementById('single-lesson-flow').classList.add('hidden');
+
+    // Show payment section similar to package flow
+    document.getElementById('new-customer-path').classList.remove('hidden');
+
+    // Update the package display to show single lesson info
+    selectedProgram = singleLessonProgram;
+    selectedPackage = {
+        program: singleLessonProgram,
+        lessons: 1,
+        price: singleLessonPrice
+    };
+
+    // Render single lesson as a "package" of 1
+    renderSingleLessonPackage();
+}
+
+function renderSingleLessonPackage() {
+    const container = document.getElementById('package-container');
+
+    container.innerHTML = `
+        <div class="max-w-md mx-auto">
+            <div class="bg-white border-2 border-blue-500 rounded-2xl p-6 shadow-lg">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🏊</div>
+                    <h3 class="text-xl font-bold mb-2">${singleLessonProgram} Single Lesson</h3>
+                    <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mb-4">
+                        <p class="text-3xl font-bold brand-blue">$${singleLessonPrice}</p>
+                        <p class="text-sm text-gray-600">One lesson</p>
+                    </div>
+                    <button onclick="proceedToPayment()"
+                            class="w-full brand-blue-bg hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full text-lg transition">
+                        Purchase Single Lesson
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 function proceedToSingleLessonCalendar() {
     selectedProgram = singleLessonProgram;
     bookingMode = 'single';
@@ -1643,22 +1685,7 @@ function proceedToSingleLessonCalendar() {
 const originalSelectTimeSlot = window.selectTimeSlot;
 window.selectTimeSlot = function(slotId, date, time) {
     selectedTimeSlot = { id: slotId, date: date, time: time };
-
-    console.log('DEBUG selectTimeSlot:', {
-        bookingMode: bookingMode,
-        enteredPackageCode: enteredPackageCode,
-        singleLessonPrice: singleLessonPrice
-    });
-
-    if (bookingMode === 'single' && !enteredPackageCode) {
-        // For single lessons without a package code (paid single lessons)
-        console.log('DEBUG: Going to showSingleLessonCheckout');
-        showSingleLessonCheckout();
-    } else {
-        // Original flow for packages or free single lessons
-        console.log('DEBUG: Going to showBookingForm');
-        showBookingForm();
-    }
+    showBookingForm();
 };
 
 function showSingleLessonCheckout() {
