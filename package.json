@@ -1,0 +1,17 @@
+{
+  "name": "safestroke-booking",
+  "version": "1.0.0",
+  "description": "SafeStroke booking system",
+  "scripts": {
+    "build": "echo Building..."
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^8.1.5",
+    "@supabase/supabase-js": "^2.39.0",
+    "node-fetch": "^3.3.2",
+    "stripe": "^14.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

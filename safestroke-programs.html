@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Swim Programs | SafeStroke Swim Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '642654784918679');
+    fbq('track', 'PageView');
+    
+    // Track programs page view
+    fbq('track', 'ViewContent', {
+        content_name: 'Programs Page',
+        content_category: 'Programs'
+    });
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=642654784918679&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    <style>
+        body { font-family: 'Outfit', sans-serif; color: #00253D; }
+        .dark-section { 
+            background-color: #00253D; 
+            color: white;
+            background-image: radial-gradient(circle at top left, rgba(34, 132, 184, 0.1) 0%, transparent 30%);
+        }
+        .brand-blue { color: #2284B8; }
+        .brand-blue-bg { background-color: #2284B8; }
+        .nav-link { transition: color 0.3s; position: relative; }
+        .nav-link.active { font-weight: 700; color: #2284B8; }
+        .nav-link:not(.active):hover { color: #2284B8; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2284B8;
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* Wave background pattern */
+        .wave-pattern {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wave-pattern::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -5%;
+            width: 110%;
+            height: 200%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.05' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,133.3C960,128,1056,96,1152,90.7C1248,85,1344,107,1392,117.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+            animation: wave 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* Floating bubbles */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95), rgba(34, 132, 184, 0.3));
+            opacity: 0.8;
+            animation: float-up 15s infinite;
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Additional overlay for depth */
+        .strokelets-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 37, 61, 0.1) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .strokelets-section {
+            background: linear-gradient(180deg, 
+                #5cb0d8 0%,     /* Medium brand blue */
+                #4a9cc9 50%,    /* Darker brand blue */
+                #3a8bba 100%);  /* Deep brand blue */
+            position: relative;
+        }
+        
+        .strokelets-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100'%3E%3Cpath fill='%235cb0d8' fill-opacity='1' d='M0,50L60,45C120,40,240,30,360,35C480,40,600,60,720,65C840,70,960,60,1080,55C1200,50,1320,50,1380,50L1440,50L1440,100L1380,100C1320,100,1200,100,1080,100C960,100,840,100,720,100C600,100,480,100,360,100C240,100,120,100,60,100L0,100Z'%3E%3C/path%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+        
+        /* Enhanced card styling */
+        .program-card {
+            background: #ffffff;
+            border: none;
+            border-radius: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.2),
+                0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .program-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2284B8 0%, #60a5fa 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .program-card:hover::before {
+            opacity: 1;
+        }
+        
+        .program-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Decorative corner elements */
+        .corner-decoration {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .corner-decoration.top-left {
+            top: 20px;
+            left: 20px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+            opacity: 0.1;
+        }
+        
+        .corner-decoration.bottom-right {
+            bottom: 20px;
+            right: 20px;
+            background: radial-gradient(circle, rgba(0, 37, 61, 0.8) 0%, transparent 70%);
+            opacity: 0.15;
+        }
+        
+        /* Animation for shield and title */
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .shield-title-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .shield-icon {
+            animation: bounceIn 0.8s ease-out;
+        }
+        
+        .shield-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2284B8 0%, #1976a3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInRight 0.8s ease-out 0.2s backwards;
+        }
+        
+        /* Text adjustments for solid cards */
+        .program-card h3,
+        .program-card p {
+            color: #00253D;
+        }
+        
+        .program-card .text-gray-700 {
+            color: #4a5568;
+        }
+        
+        .program-card .text-gray-500 {
+            color: #718096;
+        }
+        
+        /* Shield title for solid cards */
+        .program-card .shield-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2284B8 0%, #1976a3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInRight 0.8s ease-out 0.2s backwards;
+        }
+        
+        /* Button adjustments for cards */
+        .program-card .brand-blue-bg {
+            background: linear-gradient(135deg, #2284B8 0%, #1976a3 100%);
+            box-shadow: 0 4px 15px rgba(34, 132, 184, 0.3);
+        }
+        
+        .program-card .brand-blue-bg:hover {
+            background: linear-gradient(135deg, #1976a3 0%, #15628a 100%);
+            box-shadow: 0 6px 20px rgba(34, 132, 184, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        /* Shield hover effects */
+        .program-card:hover .shield-icon {
+            transform: rotate(10deg) scale(1.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .program-card:hover .shield-title {
+            transform: translateX(5px);
+            transition: transform 0.3s ease;
+        }
+        
+        .program-card .shield-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        /* Check marks and list items for solid cards */
+        .program-card .text-green-500 {
+            color: #16a34a;
+            font-weight: 600;
+        }
+        
+        .program-card .text-blue-500 {
+            color: #2284B8;
+            font-weight: 600;
+        }
+        
+        /* Strong text emphasis in solid cards */
+        .program-card strong {
+            color: #00253D;
+            font-weight: 600;
+        }
+        
+        /* Image adjustments for solid cards */
+        .program-card img.rounded-lg {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .program-card:hover img.rounded-lg {
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Top Bar -->
+    <div class="dark-section text-white text-center py-2 text-sm font-medium tracking-wider">
+        199 Scoles Ave, Clifton NJ | <a href="tel:973-820-1153" class="font-bold hover:underline">Call or Text 973-820-1153</a>
+    </div>
+
+    <!-- Header -->
+    <nav class="bg-white sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <!-- Logo (Left) -->
+            <div class="flex-shrink-0 md:flex-grow-0">
+                <a href="index.html" class="flex items-center">
+                    <img src="safestroke-images/safestroke_logo.png" alt="SafeStroke Logo" class="h-10 w-auto">
+                </a>
+            </div>
+
+            <!-- Centered Navigation Links for Desktop -->
+            <div class="hidden md:flex flex-grow justify-center items-center space-x-8 font-semibold">
+                <a href="index.html" class="nav-link">Main</a>
+                <a href="safestroke-programs.html" class="nav-link active">Programs</a>
+                <a href="safestroke-pricing.html" class="nav-link">Pricing</a>
+                <a href="safestroke-aboutus.html" class="nav-link">About Us</a>
+                <a href="safestroke-reviews.html" class="nav-link">Reviews</a>
+                <a href="safestroke-location.html" class="nav-link">Our Location</a>
+            </div>
+            
+            <!-- Book Now Button (Right, Desktop) -->
+            <div class="hidden md:flex flex-shrink-0">
+                <a href="safestroke-booking.html" class="brand-blue-bg hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full text-md transition duration-300 transform hover:scale-105 shadow-sm">Book Now</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="text-gray-800 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white px-6 pb-4 border-t border-gray-100">
+            <a href="index.html" class="block py-2 text-gray-800">Main</a>
+            <a href="safestroke-programs.html" class="block py-2 text-gray-800 font-semibold">Programs</a>
+            <a href="safestroke-pricing.html" class="block py-2 text-gray-800">Pricing</a>
+            <a href="safestroke-aboutus.html" class="block py-2 text-gray-800">About Us</a>
+            <a href="safestroke-reviews.html" class="block py-2 text-gray-800">Reviews</a>
+            <a href="safestroke-location.html" class="block py-2 text-gray-800">Our Location</a>
+            <div class="mt-4 pt-4 border-t">
+                 <a href="safestroke-booking.html" class="block w-full text-center brand-blue-bg hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full text-md transition duration-300">Book Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Top Banner Section -->
+        <section class="dark-section py-20">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/2 text-center md:text-left">
+                        <h1 class="text-5xl md:text-6xl font-black">Programs & Curriculum</h1>
+                        <p class="mt-4 text-lg max-w-xl opacity-90">Our swim classes at SafeStroke Swim Academy focus on steady, skill-driven progress — blending personalized instruction with small group dynamics to help each swimmer grow in confidence, safety, and technique week after week.</p>
+                    </div>
+                    <div class="md:w-1/2">
+                        <img src="safestroke-images/suhkickboardfront.jpg" alt="Instructor teaching a child in the pool" class="rounded-xl shadow-2xl">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Strokelets Section -->
+        <section class="py-24 strokelets-section wave-pattern">
+            <div class="container mx-auto px-6 text-center relative z-10">
+                <!-- Decorative corners -->
+                <div class="corner-decoration top-left"></div>
+                <div class="corner-decoration bottom-right"></div>
+                
+                <!-- Floating bubbles -->
+                <div class="bubble" style="width: 20px; height: 20px; left: 10%; animation-delay: 0s;"></div>
+                <div class="bubble" style="width: 15px; height: 15px; left: 30%; animation-delay: 3s;"></div>
+                <div class="bubble" style="width: 25px; height: 25px; left: 60%; animation-delay: 5s;"></div>
+                <div class="bubble" style="width: 18px; height: 18px; left: 80%; animation-delay: 7s;"></div>
+                <div class="bubble" style="width: 22px; height: 22px; left: 45%; animation-delay: 10s;"></div>
+                <!-- Section header with enhanced styling -->
+                <div class="relative inline-block mb-8">
+                    <div class="absolute inset-0 bg-white/20 blur-2xl rounded-full"></div>
+                    <img src="safestroke-images/safestroke_logo.png" alt="SafeStroke Logo" class="h-16 w-auto mx-auto mb-4 relative z-10 drop-shadow-xl">
+                </div>
+                <h2 class="text-4xl font-black mb-2 relative text-white drop-shadow-lg">
+                    <span class="relative z-10">Strokelets</span>
+                    <span class="absolute inset-x-0 bottom-0 h-3 bg-white/20 transform -skew-y-1"></span>
+                </h2>
+                <p class="text-lg text-white/90 max-w-2xl mx-auto mb-16 drop-shadow">Ages 3-12 years</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <!-- Bubble Buddies -->
+                    <div class="p-8 rounded-xl shadow-xl flex flex-col text-left program-card">
+                        <div class="shield-title-container">
+                            <img src="safestroke-images/strokelet-shield.png" alt="Strokelet Shield" class="w-16 h-16 shield-icon">
+                            <h3 class="shield-title">Bubble Buddies</h3>
+                        </div>
+                        <img src="safestroke-images/johnnydaveback.png" alt="Young swimmer practicing" class="rounded-lg mb-6 h-48 w-full object-cover">
+                        <h3 class="text-2xl font-bold mb-2">(Level 1)</h3>
+                        <p class="font-semibold text-gray-500 mb-4">3:1 Swimmer to Instructor</p>
+                        <p class="text-gray-700 mb-6 flex-grow">An introduction to water safety and comfort for beginners. Kids learn breath control, supported floats, and basic water skills in a fun, supportive setting—building confidence for independent swimming.</p>
+                        <div class="mt-auto">
+                            <a href="safestroke-booking.html" class="brand-blue-bg hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-md transition duration-300 transform hover:scale-105 shadow-lg inline-block">Book Lessons</a>
+                        </div>
+                    </div>
+                    <!-- Stroke Starters -->
+                    <div class="p-8 rounded-xl shadow-xl flex flex-col text-left program-card">
+                        <div class="shield-title-container">
+                            <img src="safestroke-images/strokelet-shield.png" alt="Strokelet Shield" class="w-16 h-16 shield-icon">
+                            <h3 class="shield-title">Stroke Starters</h3>
+                        </div>
+                         <img src="safestroke-images/matt&laracuente.jpg" alt="Child swimming independently" class="rounded-lg mb-6 h-48 w-full object-cover">
+                        <h3 class="text-2xl font-bold mb-2">(Level 2)</h3>
+                        <p class="font-semibold text-gray-500 mb-4">3:1 Swimmer to Instructor</p>
+                        <p class="text-gray-700 mb-6 flex-grow">Designed for kids ready to build independence through skills. Focuses on safe pool entry, breath control, floating, kicking, and intro to doggy paddle and freestyle — progressing towards a safe, independent swimmer.</p>
+                         <div class="mt-auto">
+                            <a href="safestroke-booking.html" class="brand-blue-bg hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-md transition duration-300 transform hover:scale-105 shadow-lg inline-block">Book Lessons</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Water Acclimation Section -->
+        <section class="py-24 wave-pattern" style="background: linear-gradient(180deg, #5cb0d8 0%, #4a9cc9 50%, #3a8bba 100%); position: relative; overflow: hidden;">
+            <div class="container mx-auto px-6 text-center relative z-10">
+                <div class="inline-block bg-gradient-to-r from-white/90 to-white/80 text-blue-900 text-sm font-bold px-4 py-2 rounded-full mb-4 shadow-md backdrop-blur">
+                    For Children Under 3 years
+                </div>
+                <h2 class="text-4xl font-black mb-16 text-white drop-shadow-lg">Water Acclimation Classes</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <!-- Droplet -->
+                    <div class="p-8 rounded-xl shadow-xl flex flex-col text-left program-card">
+                        <div class="shield-title-container">
+                            <img src="safestroke-images/droplet-shield.png" alt="Droplet Shield" class="w-16 h-16 shield-icon">
+                            <h3 class="shield-title">Droplet</h3>
+                        </div>
+                        <p class="font-semibold text-gray-500 mb-6">Ages 3-24 months (Parent & Child) | 8:1 Ratio</p>
+                        <div class="space-y-4 text-gray-700 flex-grow">
+                            <p class="flex items-start"><svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Safety Skills:</strong> Safe submersion (when ready), holding the wall, assisted entries/exits.</span></p>
+                            <p class="flex items-start"><svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Foundations:</strong> Supported floating/kicking, blowing bubbles, face in water.</span></p>
+                            <p class="flex items-start"><svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Goals:</strong> Build water comfort & trust, teach parents safe handling.</span></p>
+                        </div>
+                         <div class="mt-auto pt-6">
+                            <a href="safestroke-booking.html" class="brand-blue-bg hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-md transition duration-300 transform hover:scale-105 shadow-lg inline-block">Book Lessons</a>
+                        </div>
+                    </div>
+                    <!-- Splashlet -->
+                    <div class="p-8 rounded-xl shadow-xl flex flex-col text-left program-card">
+                        <div class="shield-title-container">
+                            <img src="safestroke-images/splashlet-shield.png" alt="Splashlet Shield" class="w-16 h-16 shield-icon">
+                            <h3 class="shield-title">Splashlet</h3>
+                        </div>
+                        <p class="font-semibold text-gray-500 mb-6">Ages 2-3 years | 4:1 Ratio</p>
+                        <div class="space-y-4 text-gray-700 flex-grow">
+                            <p class="flex items-start"><svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Safety Skills:</strong> Submersion & breath control, short propulsion to safety.</span></p>
+                            <p class="flex items-start"><svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Skill Foundations:</strong> Supported back/front floats, guided movement.</span></p>
+                            <p class="flex items-start"><svg class="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span><strong>Goals:</strong> Foster water comfort, build instructor trust, foundational for independence.</span></p>
+                        </div>
+                         <div class="mt-auto pt-6">
+                            <a href="safestroke-booking.html" class="brand-blue-bg hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full text-md transition duration-300 transform hover:scale-105 shadow-lg inline-block">Book Lessons</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section class="dark-section py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-black">Ready to Get Started?</h2>
+                <p class="text-2xl font-bold brand-blue my-2">Learn Fast. Swim Safe.</p>
+                <p class="mt-4 max-w-2xl mx-auto opacity-90">Give your child the confidence, safety skills, and progress they deserve — with personalized swim lessons that actually work.</p>
+                <a href="safestroke-booking.html" class="mt-8 inline-block brand-blue-bg hover:bg-blue-600 text-white font-bold py-4 px-12 rounded-full text-xl transition duration-300 transform hover:scale-105 shadow-lg">Book a Free Lesson Today</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="dark-section pt-16 pb-8">
+        <div class="container mx-auto px-6 text-center text-white">
+            <a href="index.html">
+                <img src="safestroke-images/safestroke_logo.png" alt="SafeStroke Logo" class="h-12 w-auto mx-auto mb-6 opacity-90">
+            </a>
+            <div class="flex justify-center space-x-6 md:space-x-8 my-8 font-semibold">
+                <a href="index.html" class="hover:text-blue-300 transition">Main</a>
+                <a href="safestroke-programs.html" class="hover:text-blue-300 transition">Programs</a>
+                <a href="safestroke-pricing.html" class="hover:text-blue-300 transition">Pricing</a>
+                <a href="safestroke-aboutus.html" class="hover:text-blue-300 transition">About Us</a>
+                <a href="safestroke-reviews.html" class="hover:text-blue-300 transition">Reviews</a>
+                <a href="safestroke-location.html" class="hover:text-blue-300 transition">Location</a>
+            </div>
+            <p class="text-sm opacity-70">&copy; 2025 SafeStroke Swim Academy. All Rights Reserved.</p>
+            <p class="text-sm opacity-70 mt-2">199 Scoles Avenue, Clifton, NJ 07012</p>
+        </div>
+    </footer>
+    
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
+

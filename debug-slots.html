@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Time Slots</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">Time Slots Debugger</h1>
+        
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">Supabase Connection</h2>
+            <div class="space-y-2">
+                <input type="text" id="supabaseUrl" placeholder="Enter Supabase URL" class="w-full p-2 border rounded">
+                <input type="password" id="supabaseKey" placeholder="Enter Supabase Service Key" class="w-full p-2 border rounded">
+                <button onclick="connectSupabase()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Connect & Run Diagnostics
+                </button>
+            </div>
+        </div>
+        
+        <div id="results" class="space-y-6"></div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+        
+        window.connectSupabase = async function() {
+            const url = document.getElementById('supabaseUrl').value;
+            const key = document.getElementById('supabaseKey').value;
+            
+            if (!url || !key) {
+                alert('Please enter both URL and key');
+                return;
+            }
+            
+            const supabase = createClient(url, key);
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p class="text-gray-500">Running diagnostics...</p>';
+            
+            try {
+                // Test 1: Check all Splashlet slots for October
+                const { data: octoberSlots, error: error1 } = await supabase
+                    .from('time_slots')
+                    .select('*')
+                    .eq('lesson_type', 'Splashlet')
+                    .gte('date', '2025-10-01')
+                    .lte('date', '2025-10-31')
+                    .order('date')
+                    .order('start_time');
+                
+                // Test 2: Group by date and check enrollment
+                const slotsByDate = {};
+                octoberSlots?.forEach(slot => {
+                    const date = slot.date;
+                    if (!slotsByDate[date]) {
+                        slotsByDate[date] = {
+                            total: 0,
+                            totalCapacity: 0,
+                            totalEnrolled: 0,
+                            slots: []
+                        };
+                    }
+                    slotsByDate[date].total++;
+                    slotsByDate[date].totalCapacity += slot.max_capacity;
+                    slotsByDate[date].totalEnrolled += slot.current_enrollment;
+                    slotsByDate[date].slots.push({
+                        id: slot.id,
+                        time: slot.start_time,
+                        group: slot.group_number,
+                        enrolled: slot.current_enrollment,
+                        capacity: slot.max_capacity
+                    });
+                });
+                
+                // Test 3: Check recent bookings
+                const { data: recentBookings, error: error2 } = await supabase
+                    .from('time_slot_bookings')
+                    .select('*, time_slots!inner(date, start_time, lesson_type)')
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+                
+                // Test 4: Check if there's a trigger issue
+                const { data: sampleSlot } = await supabase
+                    .from('time_slots')
+                    .select('*')
+                    .eq('lesson_type', 'Splashlet')
+                    .eq('date', '2025-10-05')
+                    .limit(1)
+                    .single();
+                
+                // Display results
+                let html = '';
+                
+                // Summary
+                html += `
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-bold mb-4">📊 Summary</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-600">Total October Splashlet Slots:</p>
+                                <p class="text-2xl font-bold">${octoberSlots?.length || 0}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Unique Dates with Slots:</p>
+                                <p class="text-2xl font-bold">${Object.keys(slotsByDate).length}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Date breakdown
+                html += `
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-bold mb-4">📅 Slots by Date (Sundays & Mondays)</h2>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="text-left p-2">Date</th>
+                                        <th class="text-left p-2">Day</th>
+                                        <th class="text-center p-2">Total Slots</th>
+                                        <th class="text-center p-2">Total Capacity</th>
+                                        <th class="text-center p-2">Total Enrolled</th>
+                                        <th class="text-center p-2">Available</th>
+                                        <th class="text-left p-2">Issue?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                `;
+                
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                Object.entries(slotsByDate).forEach(([date, info]) => {
+                    const dayOfWeek = new Date(date + 'T00:00:00').getDay();
+                    const available = info.totalCapacity - info.totalEnrolled;
+                    const hasIssue = (dayOfWeek === 0 && available !== 7 && available !== 8) || 
+                                     (dayOfWeek === 1 && available !== 8);
+                    
+                    html += `
+                        <tr class="border-b ${hasIssue ? 'bg-red-50' : ''}">
+                            <td class="p-2">${date}</td>
+                            <td class="p-2">${dayNames[dayOfWeek]}</td>
+                            <td class="text-center p-2">${info.total}</td>
+                            <td class="text-center p-2">${info.totalCapacity}</td>
+                            <td class="text-center p-2 ${info.totalEnrolled > 0 ? 'font-bold text-red-600' : ''}">${info.totalEnrolled}</td>
+                            <td class="text-center p-2 font-bold">${available}</td>
+                            <td class="p-2">${hasIssue ? '⚠️ Unexpected count' : '✅'}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                
+                // Recent bookings
+                html += `
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-bold mb-4">📝 Recent Bookings</h2>
+                        <div class="space-y-2">
+                `;
+                
+                recentBookings?.forEach(booking => {
+                    html += `
+                        <div class="p-3 bg-gray-50 rounded">
+                            <p><strong>Student:</strong> ${booking.student_name}</p>
+                            <p><strong>Slot ID:</strong> ${booking.time_slot_id}</p>
+                            <p><strong>Date:</strong> ${booking.time_slots?.date} at ${booking.time_slots?.start_time}</p>
+                            <p><strong>Program:</strong> ${booking.time_slots?.lesson_type}</p>
+                            <p><strong>Created:</strong> ${new Date(booking.created_at).toLocaleString()}</p>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+                
+                // Potential issue detection
+                html += `
+                    <div class="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-6">
+                        <h2 class="text-xl font-bold mb-4">⚠️ Detected Issues</h2>
+                        <div class="space-y-2">
+                `;
+                
+                // Check if all Sundays have same enrollment
+                const sundays = Object.entries(slotsByDate).filter(([date]) => {
+                    return new Date(date + 'T00:00:00').getDay() === 0;
+                });
+                
+                const sundayEnrollments = sundays.map(([, info]) => info.totalEnrolled);
+                const allSundaysSame = sundayEnrollments.every(e => e === sundayEnrollments[0]);
+                
+                if (allSundaysSame && sundayEnrollments[0] > 0) {
+                    html += `
+                        <div class="p-3 bg-red-100 rounded">
+                            <p class="font-bold text-red-700">🚨 CRITICAL: All Sundays have the same enrollment count (${sundayEnrollments[0]})!</p>
+                            <p>This suggests the database trigger or booking function is updating ALL Sunday slots instead of just the specific slot.</p>
+                        </div>
+                    `;
+                }
+                
+                // Check Monday enrollments
+                const mondays = Object.entries(slotsByDate).filter(([date]) => {
+                    return new Date(date + 'T00:00:00').getDay() === 1;
+                });
+                
+                const mondayEnrollments = mondays.map(([, info]) => info.totalEnrolled);
+                const allMondaysSame = mondayEnrollments.every(e => e === mondayEnrollments[0]);
+                
+                if (allMondaysSame && mondayEnrollments[0] > 0) {
+                    html += `
+                        <div class="p-3 bg-red-100 rounded">
+                            <p class="font-bold text-red-700">🚨 CRITICAL: All Mondays have the same enrollment count (${mondayEnrollments[0]})!</p>
+                            <p>This confirms a systematic issue with how enrollments are being updated.</p>
+                        </div>
+                    `;
+                }
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+                
+                // SQL fix suggestion
+                html += `
+                    <div class="bg-blue-50 border-2 border-blue-300 rounded-lg p-6">
+                        <h2 class="text-xl font-bold mb-4">🔧 Suggested Fix</h2>
+                        <p class="mb-4">Run this SQL in Supabase to reset enrollment counts to actual bookings:</p>
+                        <pre class="bg-white p-4 rounded overflow-x-auto text-xs">
+-- First, reset all enrollment counts to 0
+UPDATE time_slots 
+SET current_enrollment = 0 
+WHERE lesson_type = 'Splashlet';
+
+-- Then update with actual booking counts
+UPDATE time_slots ts
+SET current_enrollment = (
+    SELECT COUNT(*)
+    FROM time_slot_bookings tsb
+    WHERE tsb.time_slot_id = ts.id
+    AND tsb.status = 'confirmed'
+);
+
+-- Verify the fix
+SELECT date, COUNT(*) as slots, SUM(current_enrollment) as total_enrolled
+FROM time_slots
+WHERE lesson_type = 'Splashlet'
+AND date >= '2025-10-01'
+GROUP BY date
+ORDER BY date;</pre>
+                    </div>
+                `;
+                
+                resultsDiv.innerHTML = html;
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="bg-red-50 p-6 rounded-lg">
+                        <h2 class="text-xl font-bold text-red-700 mb-2">Error</h2>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        };
+    </script>
+</body>
+</html>

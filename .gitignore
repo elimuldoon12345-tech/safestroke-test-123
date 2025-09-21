@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.local
+.env.production
+.env.staging
+.env.test
+*.log
+npm-debug.log*
+.DS_Store
+.vscode/
+.netlify/
+dist/
+build/

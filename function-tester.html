@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function Tester</title>
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        button { padding: 10px; margin: 5px; cursor: pointer; }
+        .result { background: #f0f0f0; padding: 10px; margin: 10px 0; white-space: pre-wrap; }
+        .success { background: #d4edda; }
+        .error { background: #f8d7da; }
+    </style>
+</head>
+<body>
+    <h1>SafeStroke Function Tester</h1>
+    
+    <h2>1. Test Simple Function</h2>
+    <button onclick="testFunction('simple-test')">Test simple-test</button>
+    <div id="simple-test-result" class="result"></div>
+    
+    <h2>2. Test Hello Function</h2>
+    <button onclick="testFunction('hello')">Test hello</button>
+    <div id="hello-result" class="result"></div>
+    
+    <h2>3. Test Payment GET</h2>
+    <button onclick="testFunction('create-payment', 'GET')">Test Payment GET</button>
+    <div id="create-payment-get-result" class="result"></div>
+    
+    <h2>4. Test Payment POST</h2>
+    <button onclick="testPaymentPost()">Test Payment POST</button>
+    <div id="payment-post-result" class="result"></div>
+    
+    <h2>5. Raw Fetch Test</h2>
+    <button onclick="rawFetchTest()">Raw Fetch Test</button>
+    <div id="raw-fetch-result" class="result"></div>
+
+    <script>
+        async function testFunction(functionName, method = 'GET') {
+            const resultDiv = document.getElementById(`${functionName}${method === 'GET' ? '' : '-get'}-result`);
+            resultDiv.textContent = 'Testing...';
+            resultDiv.className = 'result';
+            
+            try {
+                const response = await fetch(`/.netlify/functions/${functionName}`, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const statusText = `Status: ${response.status} ${response.statusText}\n`;
+                const headersText = `Content-Type: ${response.headers.get('content-type')}\n\n`;
+                
+                let bodyText;
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    try {
+                        const data = await response.json();
+                        bodyText = JSON.stringify(data, null, 2);
+                        resultDiv.className = 'result success';
+                    } catch (e) {
+                        bodyText = 'Failed to parse JSON: ' + e.message;
+                        resultDiv.className = 'result error';
+                    }
+                } else {
+                    bodyText = await response.text();
+                    resultDiv.className = 'result error';
+                }
+                
+                resultDiv.textContent = statusText + headersText + bodyText;
+                
+            } catch (error) {
+                resultDiv.textContent = 'Network Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+        
+        async function testPaymentPost() {
+            const resultDiv = document.getElementById('payment-post-result');
+            resultDiv.textContent = 'Testing...';
+            resultDiv.className = 'result';
+            
+            try {
+                const response = await fetch('/.netlify/functions/create-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: 15200,
+                        program: 'Splashlet',
+                        lessons: 4
+                    })
+                });
+                
+                const statusText = `Status: ${response.status}\n`;
+                const contentType = response.headers.get('content-type');
+                const headersText = `Content-Type: ${contentType}\n\n`;
+                
+                let bodyText;
+                if (contentType && contentType.includes('application/json')) {
+                    try {
+                        const data = await response.json();
+                        bodyText = JSON.stringify(data, null, 2);
+                        resultDiv.className = 'result success';
+                    } catch (e) {
+                        const text = await response.text();
+                        bodyText = 'Not JSON. Raw response:\n' + text;
+                        resultDiv.className = 'result error';
+                    }
+                } else {
+                    bodyText = await response.text();
+                    resultDiv.className = 'result error';
+                }
+                
+                resultDiv.textContent = statusText + headersText + bodyText;
+                
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+        
+        async function rawFetchTest() {
+            const resultDiv = document.getElementById('raw-fetch-result');
+            resultDiv.textContent = 'Testing raw fetch...';
+            
+            try {
+                const response = await fetch('/.netlify/functions/create-payment');
+                const text = await response.text();
+                
+                resultDiv.textContent = `
+Raw Response:
+Status: ${response.status}
+Headers: ${[...response.headers.entries()].map(([k,v]) => `${k}: ${v}`).join('\n')}
+Body (first 500 chars):
+${text.substring(0, 500)}${text.length > 500 ? '...' : ''}
+
+Body length: ${text.length} characters
+Starts with: "${text.substring(0, 50)}"
+`;
+                
+                if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+                    resultDiv.textContent += '\n\n⚠️ WARNING: Response is HTML, not JSON!';
+                    resultDiv.className = 'result error';
+                } else {
+                    resultDiv.className = 'result';
+                }
+                
+            } catch (error) {
+                resultDiv.textContent = 'Fetch failed: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+    </script>
+</body>
+</html>

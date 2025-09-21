@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing & Packages | SafeStroke Swim Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '642654784918679');
+    fbq('track', 'PageView');
+    
+    // Track pricing page view
+    fbq('track', 'ViewContent', {
+        content_name: 'Pricing Page',
+        content_category: 'Pricing'
+    });
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=642654784918679&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    <style>
+        body { font-family: 'Outfit', sans-serif; color: #00253D; }
+        .dark-section { 
+            background-color: #00253D; 
+            color: white;
+            background-image: radial-gradient(circle at top left, rgba(34, 132, 184, 0.1) 0%, transparent 30%);
+        }
+        .brand-blue { color: #2284B8; }
+        .brand-blue-bg { background-color: #2284B8; }
+        .nav-link { transition: color 0.3s; position: relative; }
+        .nav-link.active { font-weight: 700; color: #2284B8; }
+        .nav-link:not(.active):hover { color: #2284B8; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2284B8;
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Top Bar -->
+    <div class="dark-section text-white text-center py-2 text-sm font-medium tracking-wider">
+        199 Scoles Ave, Clifton NJ | <a href="tel:973-820-1153" class="font-bold hover:underline">Call or Text 973-820-1153</a>
+    </div>
+
+    <!-- Header -->
+    <nav class="bg-white sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <!-- Logo (Left) -->
+            <div class="flex-shrink-0">
+                <a href="index.html" class="flex items-center">
+                    <img src="safestroke-images/safestroke_logo.png" alt="SafeStroke Logo" class="h-10 w-auto">
+                </a>
+            </div>
+
+            <!-- Centered Navigation Links for Desktop -->
+            <div class="hidden md:flex flex-grow justify-center items-center space-x-8 font-semibold">
+                <a href="index.html" class="nav-link">Main</a>
+                <a href="safestroke-programs.html" class="nav-link">Programs</a>
+                <a href="safestroke-pricing.html" class="nav-link active">Pricing</a>
+                <a href="safestroke-aboutus.html" class="nav-link">About Us</a>
+                <a href="safestroke-reviews.html" class="nav-link">Reviews</a>
+                <a href="safestroke-location.html" class="nav-link">Our Location</a>
+            </div>
+            
+            <!-- Book Now Button (Right, Desktop) -->
+            <div class="hidden md:flex flex-shrink-0">
+                <a href="safestroke-booking.html" class="brand-blue-bg hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full text-md transition duration-300 transform hover:scale-105 shadow-sm">Book Now</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="text-gray-800 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white px-6 pb-4 border-t border-gray-100">
+            <a href="index.html" class="block py-2 text-gray-800">Main</a>
+            <a href="safestroke-programs.html" class="block py-2 text-gray-800">Programs</a>
+            <a href="safestroke-pricing.html" class="block py-2 text-gray-800 font-semibold">Pricing</a>
+            <a href="safestroke-aboutus.html" class="block py-2 text-gray-800">About Us</a>
+            <a href="safestroke-reviews.html" class="block py-2 text-gray-800">Reviews</a>
+            <a href="safestroke-location.html" class="block py-2 text-gray-800">Our Location</a>
+            <div class="mt-4 pt-4 border-t">
+                 <a href="safestroke-booking.html" class="block w-full text-center brand-blue-bg hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full text-md transition duration-300">Book Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Pricing Section -->
+        <section class="py-24">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-5xl md:text-6xl font-black mb-4">SafeStroke Programs & Pricing</h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-16">Small groups. Big progress. Save more with multi-lesson packages.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Droplet Pricing -->
+                    <div class="group bg-white p-8 rounded-xl shadow-lg border border-gray-100 flex flex-col transition duration-300 hover:shadow-2xl hover:border-blue-500 hover:-translate-y-2">
+                        <h2 class="text-3xl font-bold transition duration-300 group-hover:brand-blue">Droplet</h2>
+                        <p class="font-semibold text-gray-500 mt-1 mb-8">Parent & Me • Ages 3-24 months</p>
+                        <div class="space-y-6 text-left flex-grow">
+                            <div class="flex justify-between items-center border-b pb-4">
+                                <div>
+                                    <p class="font-bold">Single lesson</p>
+                                    <p class="text-sm text-gray-500">Pay as you go</p>
+                                </div>
+                                <p class="text-2xl font-bold">$30<span class="text-sm font-medium text-gray-500">/lesson</span></p>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-4">
+                                <div>
+                                    <p class="font-bold">4-Lesson Package</p>
+                                    <p class="text-sm text-gray-500">$28/lesson <span class="text-green-600 font-semibold ml-2 bg-green-100 px-2 py-1 rounded-full">SAVE $8</span></p>
+                                </div>
+                                <p class="text-2xl font-bold">$112<span class="text-sm font-medium text-gray-500"> total</span></p>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-4">
+                                <div>
+                                    <p class="font-bold">6-Lesson Package</p>
+                                    <p class="text-sm text-gray-500">$27/lesson <span class="text-green-600 font-semibold ml-2 bg-green-100 px-2 py-1 rounded-full">SAVE $18</span></p>
+                                </div>
+                                <p class="text-2xl font-bold">$162<span class="text-sm font-medium text-gray-500"> total</span></p>
+                            </div>
+                             <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold">8-Lesson Package</p>
+                                    <p class="text-sm text-gray-500">$25/lesson <span class="text-green-600 font-semibold ml-2 bg-green-100 px-2 py-1 rounded-full">SAVE $40</span></p>
+                                </div>
+                                <p class="text-2xl font-bold">$200<span class="text-sm font-medium text-gray-500"> total</span></p>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <a href="safestroke-booking.html" class="w-full inline-block dark-section text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 group-hover:bg-blue-600 group-hover:scale-105 group-hover:shadow-lg">Book Droplet</a>
+                        </div>
+                    </div>
+
+                    <!-- Splashlet Pricing -->
+                    <div class="group bg-white p-8 rounded-xl shadow-lg border border-gray-100 flex flex-col transition duration-300 hover:shadow-2xl hover:border-blue-500 hover:-translate-y-2">
+                         <h2 class="text-3xl font-bold transition duration-300 group-hover:brand-blue">Splashlet</h2>
+                        <p class="font-semibold text-gray-500 mt-1 mb-8">Ages 2-3 years</p>
+                        <div class="space-y-6 text-left flex-grow">
+                            <div class="flex justify-between items-center border-b pb-4">
+                                <div>
+                                    <p class="font-bold">Single lesson</p>
+                                    <p class="text-sm text-gray-500">Pay as you go</p>
+                                </div>
+                                <p class="text-2xl font-bold">$40<span class="text-sm font-medium text-gray-500">/lesson</span></p>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-4">
+                                <div>
+                                    <p class="font-bold">4-Lesson Package</p>
+                                    <p class="text-sm text-gray-500">$38/lesson <span class="text-green-600 font-semibold ml-2 bg-green-100 px-2 py-1 rounded-full">SAVE $8</span></p>
+                                </div>
+                                <p class="text-2xl font-bold">$152<span class="text-sm font-medium text-gray-500"> total</span></p>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-4">
+                                <div>
+                                    <p class="font-bold">6-Lesson Package</p>
+                                    <p class="text-sm text-gray-500">$37/lesson <span class="text-green-600 font-semibold ml-2 bg-green-100 px-2 py-1 rounded-full">SAVE $18</span></p>
+                                </div>
+                                <p class="text-2xl font-bold">$222<span class="text-sm font-medium text-gray-500"> total</span></p>
+                            </div>
+                             <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold">8-Lesson Package</p>
+                                    <p class="text-sm text-gray-500">$35/lesson <span class="text-green-600 font-semibold ml-2 bg-green-100 px-2 py-1 rounded-full">SAVE $40</span></p>
+                                </div>
+                                <p class="text-2xl font-bold">$280<span class="text-sm font-medium text-gray-500"> total</span></p>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <a href="safestroke-booking.html" class="w-full inline-block dark-section text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 group-hover:bg-blue-600 group-hover:scale-105 group-hover:shadow-lg">Book Splashlet</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Strokelet Pricing -->
+                    <div class="group bg-white p-8 rounded-xl shadow-lg border border-gray-100 flex flex-col transition duration-300 hover:shadow-2xl hover:border-blue-500 hover:-translate-y-2">
+                         <h2 class="text-3xl font-bold transition duration-300 group-hover:brand-blue">Strokelet</h2>
+                        <p class="font-semibold text-gray-500 mt-1 mb-8">Ages 3-12 years</p>
+                        <div class="space-y-6 text-left flex-grow">
+                            <div class="flex justify-between items-center border-b pb-4">
+                                <div>
+                                    <p class="font-bold">Single lesson</p>
+                                    <p class="text-sm text-gray-500">Pay as you go</p>
+                                </div>
+                                <p class="text-2xl font-bold">$45<span class="text-sm font-medium text-gray-500">/lesson</span></p>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-4">
+                                <div>
+                                    <p class="font-bold">4-Lesson Package</p>
+                                    <p class="text-sm text-gray-500">$43/lesson <span class="text-green-600 font-semibold ml-2 bg-green-100 px-2 py-1 rounded-full">SAVE $8</span></p>
+                                </div>
+                                <p class="text-2xl font-bold">$172<span class="text-sm font-medium text-gray-500"> total</span></p>
+                            </div>
+                            <div class="flex justify-between items-center border-b pb-4">
+                                <div>
+                                    <p class="font-bold">6-Lesson Package</p>
+                                    <p class="text-sm text-gray-500">$42/lesson <span class="text-green-600 font-semibold ml-2 bg-green-100 px-2 py-1 rounded-full">SAVE $18</span></p>
+                                </div>
+                                <p class="text-2xl font-bold">$252<span class="text-sm font-medium text-gray-500"> total</span></p>
+                            </div>
+                             <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold">8-Lesson Package</p>
+                                    <p class="text-sm text-gray-500">$40/lesson <span class="text-green-600 font-semibold ml-2 bg-green-100 px-2 py-1 rounded-full">SAVE $40</span></p>
+                                </div>
+                                <p class="text-2xl font-bold">$320<span class="text-sm font-medium text-gray-500"> total</span></p>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <a href="safestroke-booking.html" class="w-full inline-block dark-section text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 group-hover:bg-blue-600 group-hover:scale-105 group-hover:shadow-lg">Book Strokelet</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="dark-section py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-black">Ready to Get Started?</h2>
+                <p class="text-2xl font-bold brand-blue my-2">Learn Fast. Swim Safe.</p>
+                <p class="mt-4 max-w-2xl mx-auto opacity-90">Give your child the confidence, safety skills, and progress they deserve — with personalized swim lessons that actually work.</p>
+                <a href="safestroke-booking.html" class="mt-8 inline-block brand-blue-bg hover:bg-blue-600 text-white font-bold py-4 px-12 rounded-full text-xl transition duration-300 transform hover:scale-105 shadow-lg">Book a Free Lesson Today</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dark-section pt-16 pb-8">
+        <div class="container mx-auto px-6 text-center text-white">
+            <a href="index.html">
+                <img src="safestroke-images/safestroke_logo.png" alt="SafeStroke Logo" class="h-12 w-auto mx-auto mb-6 opacity-90">
+            </a>
+            <div class="flex justify-center space-x-6 md:space-x-8 my-8 font-semibold">
+                <a href="index.html" class="hover:text-blue-300 transition">Main</a>
+                <a href="safestroke-programs.html" class="hover:text-blue-300 transition">Programs</a>
+                <a href="safestroke-pricing.html" class="hover:text-blue-300 transition">Pricing</a>
+                <a href="safestroke-aboutus.html" class="hover:text-blue-300 transition">About Us</a>
+                <a href="safestroke-reviews.html" class="hover:text-blue-300 transition">Reviews</a>
+                <a href="safestroke-location.html" class="hover:text-blue-300 transition">Location</a>
+            </div>
+            <p class="text-sm opacity-70">&copy; 2025 SafeStroke Swim Academy. All Rights Reserved.</p>
+            <p class="text-sm opacity-70 mt-2">199 Scoles Avenue, Clifton, NJ 07012</p>
+        </div>
+    </footer>
+    
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
+

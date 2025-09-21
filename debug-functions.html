@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Functions - SafeStroke</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Function Debug Panel</h1>
+        
+        <!-- Test Basic Function -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">1. Test Basic Function (No Dependencies)</h2>
+            <button onclick="testBasicFunction()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                Test Basic Function
+            </button>
+            <div id="basic-result" class="mt-4 p-4 bg-gray-50 rounded font-mono text-sm"></div>
+        </div>
+
+        <!-- Test Payment Function GET -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">2. Test Payment Function (GET Request)</h2>
+            <button onclick="testPaymentGet()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                Test Payment GET
+            </button>
+            <div id="payment-get-result" class="mt-4 p-4 bg-gray-50 rounded font-mono text-sm"></div>
+        </div>
+
+        <!-- Test Payment Function POST -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">3. Test Payment Function (POST Request)</h2>
+            <button onclick="testPaymentPost()" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                Test Payment POST
+            </button>
+            <div id="payment-post-result" class="mt-4 p-4 bg-gray-50 rounded font-mono text-sm"></div>
+        </div>
+
+        <!-- Direct URL Test -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">4. Direct URL Tests</h2>
+            <p class="mb-4">Click these links to test functions directly in your browser:</p>
+            <div class="space-y-2">
+                <a href="/.netlify/functions/test-function" target="_blank" class="text-blue-500 hover:underline block">
+                    /.netlify/functions/test-function
+                </a>
+                <a href="/.netlify/functions/create-payment" target="_blank" class="text-blue-500 hover:underline block">
+                    /.netlify/functions/create-payment
+                </a>
+                <a href="/.netlify/functions/system-health" target="_blank" class="text-blue-500 hover:underline block">
+                    /.netlify/functions/system-health
+                </a>
+            </div>
+        </div>
+
+        <!-- Deployment Checklist -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-bold mb-4">Deployment Checklist</h2>
+            <div class="space-y-2">
+                <label class="flex items-center">
+                    <input type="checkbox" class="mr-2">
+                    <span>netlify.toml file exists in root</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" class="mr-2">
+                    <span>package.json file exists in root</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" class="mr-2">
+                    <span>netlify/functions/ folder structure is correct</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" class="mr-2">
+                    <span>Environment variables added in Netlify</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="checkbox" class="mr-2">
+                    <span>Redeployed after adding environment variables</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function testBasicFunction() {
+            const resultDiv = document.getElementById('basic-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('/.netlify/functions/test-function');
+                const text = await response.text();
+                
+                try {
+                    const data = JSON.parse(text);
+                    resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } catch (e) {
+                    resultDiv.innerHTML = `Response is not JSON:\n${text}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `Error: ${error.message}`;
+            }
+        }
+
+        async function testPaymentGet() {
+            const resultDiv = document.getElementById('payment-get-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('/.netlify/functions/create-payment');
+                const text = await response.text();
+                
+                try {
+                    const data = JSON.parse(text);
+                    resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } catch (e) {
+                    resultDiv.innerHTML = `Response is not JSON:\n${text}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `Error: ${error.message}`;
+            }
+        }
+
+        async function testPaymentPost() {
+            const resultDiv = document.getElementById('payment-post-result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('/.netlify/functions/create-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: 15200,
+                        program: 'Splashlet',
+                        lessons: 4
+                    })
+                });
+                
+                const text = await response.text();
+                
+                try {
+                    const data = JSON.parse(text);
+                    resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } catch (e) {
+                    resultDiv.innerHTML = `Response is not JSON:\n${text}`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `Error: ${error.message}`;
+            }
+        }
+
+        // Run tests on load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('Debug panel loaded. Click the buttons to test functions.');
+        });
+    </script>
+</body>
+</html>
