@@ -145,7 +145,7 @@ exports.handler = async (event, context) => {
 
     // 3. Check if this student is already booked for this slot
     const { data: existingBooking } = await supabase
-      .from('time_slot_bookings')
+      .from('bookings')
       .select('id')
       .eq('time_slot_id', timeSlotId)
       .eq('package_code', packageCode)
@@ -170,7 +170,7 @@ exports.handler = async (event, context) => {
     });
 
     const { data: booking, error: bookingError } = await supabase
-      .from('time_slot_bookings')
+      .from('bookings')
       .insert([
         {
           time_slot_id: timeSlotId,
