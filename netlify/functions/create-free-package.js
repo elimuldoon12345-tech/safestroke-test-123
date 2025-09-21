@@ -61,9 +61,7 @@ exports.handler = async (event, context) => {
           lessons_total: 1,
           lessons_remaining: 1,
           amount_paid: 0,
-          payment_intent_id: `promo_${promoCode}`,
-          status: 'paid',
-          created_at: new Date().toISOString()
+          status: 'paid'
         }
       ])
       .select()
