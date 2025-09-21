@@ -1595,22 +1595,42 @@ function resetPriceDisplays() {
 
 async function handleFreeSingleLesson() {
     try {
+        console.log('DEBUG: handleFreeSingleLesson called');
+        console.log('DEBUG: singleLessonProgram:', singleLessonProgram);
+        console.log('DEBUG: appliedPromoCode:', appliedPromoCode);
+
+        const requestData = {
+            program: singleLessonProgram,
+            promoCode: appliedPromoCode ? appliedPromoCode.code : 'FIRST-FREE'
+        };
+
+        console.log('DEBUG: Sending request to create-free-package:', requestData);
+
         const response = await fetch('/.netlify/functions/create-free-package', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                program: singleLessonProgram,
-                promoCode: appliedPromoCode ? appliedPromoCode.code : 'FIRST-FREE'
-            })
+            body: JSON.stringify(requestData)
         });
+
+        console.log('DEBUG: Response status:', response.status);
+        console.log('DEBUG: Response ok:', response.ok);
         
         if (!response.ok) {
-            throw new Error('Failed to create free lesson package');
+            const errorText = await response.text();
+            console.error('DEBUG: Response not ok. Status:', response.status, 'Error:', errorText);
+            throw new Error(`Failed to create free lesson package: ${response.status} - ${errorText}`);
         }
-        
-        const { packageCode } = await response.json();
+
+        const responseData = await response.json();
+        console.log('DEBUG: Response data:', responseData);
+
+        const { packageCode } = responseData;
+        console.log('DEBUG: Got package code:', packageCode);
+
         enteredPackageCode = packageCode;
         selectedProgram = singleLessonProgram;
+
+        console.log('DEBUG: Set enteredPackageCode and selectedProgram');
         
         // Hide single lesson flow and show calendar
         document.getElementById('single-lesson-flow').classList.add('hidden');
