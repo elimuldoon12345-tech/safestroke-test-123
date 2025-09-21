@@ -624,7 +624,9 @@ async function loadTimeSlots(program) {
         console.log('Current calendar month:', currentCalendarMonth.toISOString());
         console.log('Query URL:', `/.netlify/functions/get-time-slots?program=${program}&month=${currentCalendarMonth.toISOString()}`);
 
-        const response = await fetch(`/.netlify/functions/get-time-slots?program=${program}&month=${currentCalendarMonth.toISOString()}`);
+        // Ensure we query for the same month that the calendar will display
+        const queryMonth = new Date(2025, 9, 1); // October 2025 (month 9 = October)
+        const response = await fetch(`/.netlify/functions/get-time-slots?program=${program}&month=${queryMonth.toISOString()}`);
 
         if (!response.ok) {
             throw new Error('Failed to load time slots');
@@ -654,7 +656,9 @@ async function loadTimeSlots(program) {
         });
         
         console.log('Slots grouped by date:', slotsByDateDebug);
-        
+        console.log('Calendar month being rendered:', currentCalendarMonth.toISOString());
+        console.log('First 5 slot dates:', timeSlots.slice(0, 5).map(s => s.date));
+
         renderCalendar(timeSlots);
         
     } catch (error) {
@@ -672,7 +676,11 @@ async function loadTimeSlots(program) {
 function renderCalendar(timeSlots) {
     const container = document.getElementById('calendar-container');
     const loadingDiv = document.getElementById('calendar-loading');
-    
+
+    console.log('=== RENDER CALENDAR DEBUG ===');
+    console.log('Calendar rendering month:', currentCalendarMonth.toISOString());
+    console.log('Number of slots to display:', timeSlots.length);
+
     loadingDiv.classList.add('hidden');
     
     // Group time slots by date
