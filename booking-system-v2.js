@@ -118,8 +118,8 @@ function initializeBookingFlow() {
 }
 
 function initializeStripe() {
-    const stripeKey = document.querySelector('meta[name="stripe-public-key"]')?.content || 
-                     'pk_test_51S4UnDPRIIfaJZnp1eF8ZlFCD74YDhIU0LVsu3oX3RAy58FBARnucYobBFWf2Wr0wBTZ7smsb1br4ySd2PcfZN4m00oGXz5yQn';
+    const stripeKey = document.querySelector('meta[name="stripe-public-key"]')?.content ||
+                     'pk_live_51S4Un3PKONca2rV4hsK1odzEvznKxPPcUPYChECIPMGTpNMHtFhevL5A5oIi5HoTbty8WMF7eW221YpCR565PxDG00hawzM5Fc';
     
     if (typeof Stripe !== 'undefined') {
         stripe = Stripe(stripeKey);
