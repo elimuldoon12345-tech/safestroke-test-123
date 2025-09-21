@@ -41,10 +41,10 @@ exports.handler = async (event, context) => {
     let query = supabase
       .from('time_slots')
       .select('*')
-      .eq('lesson_type', program)
+      .eq('program', program)
       .eq('status', 'available')
       .order('date', { ascending: true })
-      .order('start_time', { ascending: true });
+      .order('time', { ascending: true });
 
     // If specific date provided
     if (date) {
